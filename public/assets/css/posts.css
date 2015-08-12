@@ -1,0 +1,26 @@
+td {
+	padding: 0px;
+	background-color: #E1E1E1;
+	width: 400px;
+}
+
+.button {
+	float: right;
+	padding: 2px;
+	width: 32px;
+	height: 32px;
+}
+
+.buttonDiv {
+	padding-bottom: 10px;
+}
+
+.postDiv {
+	padding: 10px;
+}
+
+.postDiv a {
+	outline: 0;
+	color: #000000;
+	text-decoration: none;
+}
