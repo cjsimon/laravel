@@ -72,9 +72,8 @@ class PostController extends Controller {
 	 */
 	public function update($id, Request $request) {
 		$post = Post::findOrFail($id);
-		$post->content = $request->content;
+		$post->content = Input::get('content');
 		
-		$post->save();
 		// Attempt to save, will return false on invalid model.
 		// Because this is a new model, the "creating" ruleset will
 		// be used to validate against. If it does not exist then the
@@ -99,8 +98,9 @@ class PostController extends Controller {
 	public function store(Request $request) {
 		// Populate the post with the request data
 		$post = new Post;
-		$post->content = $request->content;
-		
+		$post->content = Input::get('content');
+		$post->user_id = Auth::id();
+			
 		// Attempt to save the new post to the database
 		if(!$post->save()) {
 			// Redirect back to the form with the message bag of errors
@@ -138,10 +138,10 @@ class PostController extends Controller {
 		$post = Post::findOrFail($id);
 		$comments = Comment::with('post_id', '=', $id);
 		
+		// Get the user feed
 		$user_id = Auth::id();
-		// User Feed
-		$feed = FeedManager::getNotificationFeed($user_id);
-		//$feed = FeedManager::getClient()->feed('user', "$user_id"); // PHP Implementation
+		//$feed = FeedManager::getNotificationFeed($user_id);
+		$feed = FeedManager::getUserFeed($post->id);
 		$enricher = new Enrich;
 		$feed_activities = $feed->getActivities(0, 25); // Not retrieving anything
 		$activities = $feed_activities['results'];

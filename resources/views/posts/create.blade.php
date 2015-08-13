@@ -20,6 +20,7 @@ use Illuminate\Auth\Authenticatable;
 	@endif
 
 	{!! Form::open(['action' => ['PostController@store'], 'method' => 'post']) !!}
+	{!! Form::hidden('uesr_id', Auth::user()->id) !!}
 		<table>
 			<tr>
 				<div class="form-group">

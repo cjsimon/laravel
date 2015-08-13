@@ -16,6 +16,7 @@
 	@endif
 
 	{!! Form::open(['action' => ['PostController@update', $post->id], 'method' => 'put']) !!}
+	{!! Form::hidden('user_id', Auth::user()->id) !!}
 		<table>
 			<tr>
 				<div class="form-group">

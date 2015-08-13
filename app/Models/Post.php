@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
+use Auth;
 use \Esensi\Model\Contracts\ValidatingModelInterface;
 use \Esensi\Model\Traits\ValidatingModelTrait;
 use GetStream\StreamLaravel\Eloquent\ActivityTrait;
 use \Illuminate\Database\Eloquent\Model as Eloquent;
-use GetStream\StreamLaravel\Enrich;
 
 class Post extends Eloquent implements ValidatingModelInterface
 {
@@ -23,20 +23,33 @@ class Post extends Eloquent implements ValidatingModelInterface
 	
 	// Esensi Relationships
 	protected $relationships = [
-		'category' => ['belongsTo', 'App\Models\Category'],
-		'tags'     => ['belongsToMany', 'App\Models\Tag'],
-		'comment'  => ['hasMany', 'App\Models\Comment'],
+		'category'	=> ['belongsTo', 'App\Models\Category'],
+		'tags'		=> ['belongsToMany', 'App\Models\Tag'],
+		'comment'	=> ['hasMany', 'App\Models\Comment'],
+		'user'		=> ['belongsTo', 'App\Models\User']
 	];
 	
 	// Activity Actor
 	public function activityActorId()
 	{
-		return $this->id;
+		//return Auth::id();
+		//return $this->id;
 	}
 	
 	public function activityActor()
 	{
-		return "Post:$this->id";
+		//return Auth::user()->name;
+		//return "Post:$this->id";
+	}
+	
+	public function activityActorMethodName()
+	{
+		return 'author';
+	}
+	
+	public function author()
+	{
+		return $this->belongsTo('App\Models\User');
 	}
 	
 	public function activityExtraData()
@@ -50,15 +63,25 @@ class Post extends Eloquent implements ValidatingModelInterface
 	// Laravel Relationships
 	//
 	// /**
+	//  * Get the user that this post belongs to.
+	//  * 
+	//  * @return Model User
+	//  */
+	// public function user()
+	// {
+	// 	// Eloquent determines the foreign key
+	// 	// of the relationship based on this model's name (model_id),
+	// 	// though it can optionally be specified.
+	// 	return $this->belongsTo('App\Models\User', 'user_id');
+	// }
+	
+	// /**
 	//  * Get the category that this post belongs to.
 	//  * 
 	//  * @return Model Category
 	//  */
 	// public function category()
 	// {
-	// 	// Eloquent determines the foreign key
-	// 	// of the relationship based on this model's name (model_id),
-	// 	// though it can optionally be specified.
 	// 	return $this->belongsTo('App\Models\Category', 'post_id');
 	// }
 	
