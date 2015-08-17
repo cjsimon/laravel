@@ -16,10 +16,19 @@ use App\Http\Controllers\Controller;
 // Request
 use Illuminate\Http\Request;
 // Enrich
-use GetStream\StreamLaravel\Enrich;
+//use GetStream\StreamLaravel\Enrich;
 
 class CommentController extends Controller
 {
+	
+	static $client;
+	
+	function __construct() {
+		// Establish the GetStream Client
+		self::$client = new Client('kcfbtpuqztgk', 'n7vpeta72a3vynw6qjmhq7z3zq4q9gyrg3x7m82u9dtkgjz4tketjfef9ekucse5');
+		self::$client->setLocation('us-east');
+	}
+	
 	//
 	// Actions
 	//
@@ -74,7 +83,6 @@ class CommentController extends Controller
 	public function update($id, Request $request)
 	{
 		$comment = Comment::findOrFail($id);
-		$comment->save();
 		// Attempt to save, will return false on invalid model.
 		// Because this is a new model, the "creating" ruleset will
 		// be used to validate against. If it does not exist then the
@@ -101,16 +109,29 @@ class CommentController extends Controller
 	{
 		// Populate the comment with the request data
 		$comment = new Comment;
-		$comment->content = $request->content;
-		$comment->post_id = $request->post_id;
+		$comment->content = Input::get('content');
+		$comment->post_id = Input::get('post_id');
+		$comment->user_id = Input::get('user_id');
 		
-		// Attempt to save the new comment to the database
+		// Attempt to save the new post to the database.
+		// Error out if this doesn't work
 		if(!$comment->save()) {
 			// Redirect back to the form with the message bag of errors
-			return redirect()->action('CommentController@create')
+			return redirect()->action('PostController@create')
 				->withErrors($comment->getErrors())
 				->withInput();
 		}
+		
+		// Add the activity to the comment feed
+		$commentFeed = self::$client->feed('comment', $comment->id);
+		$data = [
+			"actor"  => Auth::id(),
+			"verb"   => 'create',
+			"object" => 'comment',
+			"conent" => $comment->content,
+			"to"	 => ["user:$comment->user_id", "post:$comment->post_id"]
+		];
+		$commentFeed->addActivity($data);
 		
 		// Redirect to the CommentController index action
 		return redirect()->action('CommentController@index');

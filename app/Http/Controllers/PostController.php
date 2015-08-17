@@ -11,14 +11,23 @@ use App\Models\Comment as Comment;
 use App\Models\User as User;
 // Get Stream
 use GetStream\Stream\Client;
-use GetStream\StreamLaravel\Facades\FeedManager;
-use GetStream\StreamLaravel\Enrich as Enrich;
+//use GetStream\StreamLaravel\Facades\FeedManager;
+//use GetStream\StreamLaravel\Enrich as Enrich;
 // Controller
 use App\Http\Controllers\Controller;
 // Request
 use Illuminate\Http\Request;
 
 class PostController extends Controller {
+
+	static $client;
+	
+	function __construct() {
+		// Establish the GetStream Client
+		self::$client = new Client('kcfbtpuqztgk', 'n7vpeta72a3vynw6qjmhq7z3zq4q9gyrg3x7m82u9dtkgjz4tketjfef9ekucse5');
+		self::$client->setLocation('us-east');
+	}
+	
 	//
 	// Actions
 	//
@@ -99,9 +108,10 @@ class PostController extends Controller {
 		// Populate the post with the request data
 		$post = new Post;
 		$post->content = Input::get('content');
-		$post->user_id = Auth::id();
+		$post->user_id = Input::get('user_id');
 			
-		// Attempt to save the new post to the database
+		// Attempt to save the new post to the database.
+		// Error out if this doesn't work
 		if(!$post->save()) {
 			// Redirect back to the form with the message bag of errors
 			return redirect()->action('PostController@create')
@@ -109,20 +119,16 @@ class PostController extends Controller {
 				->withInput();
 		}
 		
-		//	GetStream PHP Implementation
-		//	// Establish the GetStream Client
-		//	$client = new Client('qu8cmv5utkzv', 'tprxgxky248vbu4kbg2z9mr3h57rajrb6vfhr5dkdkh4fu2fdpcvf9dgpat7ncxn');
-		//	// Get the feed object
-		//	$postFeed = $client->feed('user', 'cjsimon');
-		//	// Post to the feed
-		//	$data = [
-		//		"actor"  => Auth::user()->name,
-		//		"verb"   => "create",
-		//		"object" => 'Post',
-		//		"conent" => $request->content
-		//	];
-		//	// Add the activity to the feed
-		//	$postFeed->addActivity($data);
+		// Add the activity to the post feed
+		$postFeed = self::$client->feed('post', $post->id);
+		$data = [
+			"actor"  => Auth::id(),
+			"verb"   => 'create',
+			"object" => 'post',
+			"conent" => $post->content,
+			"to"	 => ["user:$post->user_id"]
+		];
+		$postFeed->addActivity($data);
 		
 		// Redirect to the PostController index action
 		return redirect()->action('PostController@index');
@@ -138,14 +144,15 @@ class PostController extends Controller {
 		$post = Post::findOrFail($id);
 		$comments = Comment::with('post_id', '=', $id);
 		
-		// Get the user feed
-		$user_id = Auth::id();
-		//$feed = FeedManager::getNotificationFeed($user_id);
-		$feed = FeedManager::getUserFeed($post->id);
-		$enricher = new Enrich;
-		$feed_activities = $feed->getActivities(0, 25); // Not retrieving anything
-		$activities = $feed_activities['results'];
-		$activities = $enricher->enrichActivities($activities);
+		// Show feed data
+//		// GetStream-Laravel
+//		$user_id = Auth::id();
+//		$feed = FeedManager::getUserFeed('cjsimon');
+//		$enricher = new Enrich;
+//		$feed_activities = $feed->getActivities(0, 25); // Not retrieving anything
+//		$activities = $feed_activities['results'];
+//		$activities = $enricher->enrichActivities($activities);
+		$activities = [];
 		
 		return View('posts.show')
 			->with('post', $post)

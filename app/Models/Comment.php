@@ -22,9 +22,11 @@ class Comment extends Eloquent implements ValidatingModelInterface
 	
 	// Esensi Relationships
 	protected $relationships = [
-		'comment' => ['belongsTo', 'App\Models\Post']
+		'comment' => ['belongsTo', 'App\Models\Post'],
+		//'comment' => ['belongsTo', 'App\Models\User']
 	];
 	
+	/*
 	// Activity Actor
 	public function activityActorId()
 	{
@@ -50,4 +52,5 @@ class Comment extends Eloquent implements ValidatingModelInterface
 	{
 		//return [];
 	}
+	*/
 }

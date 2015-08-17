@@ -16,6 +16,8 @@
 	@endif
 
 	{!! Form::open(['action' => ['CommentController@store'], 'method' => 'post']) !!}
+	{!! Form::hidden('user_id', Auth::id()) !!}
+	{!! Form::hidden('post_id', $post_id) !!}
 		<table>
 			<tr>
 				<div class="form-group">
@@ -30,7 +32,6 @@
 			<tr>
 				<td></td>
 				<td>
-					{!! Form::hidden('post_id', $post_id) !!}
 					{!! Form::submit('Submit Comment', ['class' => 'btn btn-primary', 'style' => 'width: 100%;']) !!}
 				</td>
 			</tr>

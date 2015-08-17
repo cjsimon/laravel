@@ -5,12 +5,12 @@ namespace App\Models;
 use Auth;
 use \Esensi\Model\Contracts\ValidatingModelInterface;
 use \Esensi\Model\Traits\ValidatingModelTrait;
-use GetStream\StreamLaravel\Eloquent\ActivityTrait;
+//use GetStream\StreamLaravel\Eloquent\ActivityTrait;
 use \Illuminate\Database\Eloquent\Model as Eloquent;
 
 class Post extends Eloquent implements ValidatingModelInterface
 {
-	use ActivityTrait;
+	//use ActivityTrait;
 	use ValidatingModelTrait;
 	
 	protected $table = 'posts';
@@ -29,16 +29,17 @@ class Post extends Eloquent implements ValidatingModelInterface
 		'user'		=> ['belongsTo', 'App\Models\User']
 	];
 	
+	/*
 	// Activity Actor
 	public function activityActorId()
 	{
-		//return Auth::id();
+		return Auth::id();
 		//return $this->id;
 	}
 	
 	public function activityActor()
 	{
-		//return Auth::user()->name;
+		return Auth::user()->name;
 		//return "Post:$this->id";
 	}
 	
@@ -58,6 +59,7 @@ class Post extends Eloquent implements ValidatingModelInterface
 			'content' => "$this->contnent"
 		];
 	}
+	*/
 	
 	//
 	// Laravel Relationships

@@ -1,7 +1,3 @@
-<?php
-use Illuminate\Auth\Authenticatable;
-?>
-
 @extends('layout')
 
 @section('content')
@@ -20,7 +16,7 @@ use Illuminate\Auth\Authenticatable;
 	@endif
 
 	{!! Form::open(['action' => ['PostController@store'], 'method' => 'post']) !!}
-	{!! Form::hidden('uesr_id', Auth::user()->id) !!}
+	{!! Form::hidden('user_id', Auth::id()) !!}
 		<table>
 			<tr>
 				<div class="form-group">

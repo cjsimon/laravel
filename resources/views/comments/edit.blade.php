@@ -16,6 +16,8 @@
 	@endif
 
 	{!! Form::open(['action' => ['CommentController@update', $comment->id], 'method' => 'put']) !!}
+	{!! Form::hidden('user_id', $post_id) !!}
+	{!! Form::hidden('post_id', $post_id) !!}
 		<table>
 			<tr>
 				<div class="form-group">

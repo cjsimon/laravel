@@ -1,3 +1,6 @@
+<?php
+use Illuminate\Auth\Authenticatable;
+?>
 <html>
 <body>
 	{{-- Load any assets here --}}
