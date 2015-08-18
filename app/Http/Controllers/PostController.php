@@ -125,7 +125,7 @@ class PostController extends Controller {
 			"actor"  => Auth::id(),
 			"verb"   => 'create',
 			"object" => 'post',
-			"conent" => $post->content,
+			"content" => $post->content,
 			"to"	 => ["user:$post->user_id"]
 		];
 		$postFeed->addActivity($data);
@@ -152,7 +152,10 @@ class PostController extends Controller {
 //		$feed_activities = $feed->getActivities(0, 25); // Not retrieving anything
 //		$activities = $feed_activities['results'];
 //		$activities = $enricher->enrichActivities($activities);
-		$activities = [];
+		
+		// PHP GetStream Library
+		$activities = self::$client->feed('post', $post->id)->getActivities();
+		$activities = $activities['results'];
 		
 		return View('posts.show')
 			->with('post', $post)

@@ -24,11 +24,11 @@ use Illuminate\Http\Request;
 						{{-- Buttons --}}
 						<div class="buttonDiv">
 							{{-- Delete --}}
-							<a href="{{ URL::action('PostController@destroy', ['id' => $post->id]) }}" data-method="delete" data-confirm=""><img class="button" src="{{ URL::asset('assets/images/close.png') }}"></img></a>
+							<a href="{{ URL::action('PostController@destroy', ['id' => $post->id]) }}" data-method="delete" data-confirm=""><img class="button" src="{{ URL::asset('assets/images/close.png') }}"></a>
 							{{-- Add Comment --}}
-							<a href="{{ URL::action('CommentController@create', ['id' => $post->id]) }}"><img class="button" src="{{ URL::asset('assets/images/add.png') }}"></img></a>
+							<a href="{{ URL::action('CommentController@create', ['id' => $post->id]) }}">< class="button" src="{{ URL::asset('assets/images/add.png') }}"></a>
 							{{-- Edit --}}
-							<a href="{{ URL::action('PostController@edit', ['id' => $post->id]) }}"><img class="button" src="{{ URL::asset('assets/images/edit.png') }}"></img></a>
+							<a href="{{ URL::action('PostController@edit', ['id' => $post->id]) }}">< class="button" src="{{ URL::asset('assets/images/edit.png') }}"></a>
 						</div>
 						{{-- Post --}}
 						<div class="postDiv">
